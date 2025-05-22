@@ -2,22 +2,30 @@ import filecmp
 import shutil
 from pathlib import Path
 
+import click
+
+ORIGEM = Path(r"C:\Users\erodr\src\local-backup\origem")
+DESTINO = Path(r"C:\Users\erodr\src\local-backup\destino")
+
 
 def copy_new_files(src: Path, dst: Path) -> None | list[Path]:
     failed: list[Path] = []
 
     comparacao = filecmp.dircmp(src, dst)
-
     # Files
-    for diff_filename in comparacao.left_only:
-        new_file = src.joinpath(diff_filename)
-        if new_file.is_file():
-            shutil.copy2(src=new_file, dst=dst.joinpath(diff_filename))
-        else:
-            new_directory = dst.joinpath(diff_filename)
-            if not new_directory.exists():
-                new_directory.mkdir()
-                copy_new_files(src=src.joinpath(diff_filename), dst=new_directory)
+    with click.progressbar(
+        comparacao.left_only,
+        label=f"{src.as_posix()}",
+    ) as all_files:
+        for diff_filename in all_files:
+            new_file = src.joinpath(diff_filename)
+            if new_file.is_file():
+                shutil.copy2(src=new_file, dst=dst.joinpath(diff_filename))
+            else:
+                new_directory = dst.joinpath(diff_filename)
+                if not new_directory.exists():
+                    new_directory.mkdir()
+                    copy_new_files(src=src.joinpath(diff_filename), dst=new_directory)
 
     # Directories
     for directory in comparacao.common_dirs:
@@ -33,10 +41,7 @@ def copy_new_files(src: Path, dst: Path) -> None | list[Path]:
 
 
 def main() -> None:
-    origem = Path(r"C:\Users\erodr\src\local-backup\origem")
-    destino = Path(r"C:\Users\erodr\src\local-backup\destino")
-
-    errors = copy_new_files(src=origem, dst=destino)
+    errors = copy_new_files(src=ORIGEM, dst=DESTINO)
     if errors:
         print(errors)
 
