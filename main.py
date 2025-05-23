@@ -1,11 +1,13 @@
 import filecmp
 import shutil
+import tomllib
 from pathlib import Path
 
 import click
 
-ORIGEM = Path(r"C:\Users\erodr\src\local-backup\origem")
-DESTINO = Path(r"C:\Users\erodr\src\local-backup\destino")
+CONFIG = tomllib.load(Path("config.toml").open("rb"))
+ORIGEM = Path(CONFIG["origem"])
+DESTINO = Path(CONFIG["destino"])
 
 
 def copy_new_files(src: Path, dst: Path) -> None | list[Path]:
