@@ -1,5 +1,6 @@
+# RENAME this file to 'config.toml'.
 # Paths must be surrounded by single quotes,
 # example: 'C:\Dir\Origin'
 
-origem = 'C:\Users\Everton\OneDrive\BackUp'
-destino = 'D:\BackUp'
+origem = 
+destino = 

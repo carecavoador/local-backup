@@ -10,3 +10,6 @@ origem/
 
 # Virtual environments
 .venv
+
+# Actual configuration
+config.toml

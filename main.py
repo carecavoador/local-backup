@@ -1,9 +1,9 @@
 import filecmp
 import shutil
-import tomllib
 from pathlib import Path
 
 import click
+import tomllib
 
 CONFIG = tomllib.load(Path("config.toml").open("rb"))
 ORIGEM = Path(CONFIG["origem"])
@@ -46,6 +46,9 @@ def main() -> None:
     errors = copy_new_files(src=ORIGEM, dst=DESTINO)
     if errors:
         print(errors)
+    else:
+        print("BackUp concluído com sucesso!")
+    input("Pressione qualquer tecla para terminar...")
 
 
 if __name__ == "__main__":
